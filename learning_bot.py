@@ -13,8 +13,8 @@ class r2_sc2(sc2.BotAI):
         await self.distribute_workers()
         await self.build_workers()
         await self.build_pylons()
-        await self.expand()
         await self.build_assimilator()
+        await self.expand()
 
       
     
