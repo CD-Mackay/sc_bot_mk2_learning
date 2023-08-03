@@ -2,6 +2,10 @@ import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
 from sc2.constants import NEXUS, PROBE, PYLON
+from sc2.ids.unit_typeid import UnitTypeId
+from typing import List, Dict, Set, Tuple, Any, Optional, Union # mypy type checking
+from .position import Point2, Point3
+import math
 
 
 class r2_sc2(sc2.BotAI):
@@ -9,6 +13,7 @@ class r2_sc2(sc2.BotAI):
         await self.distribute_workers()
         await self.build_workers()
         await self.build_pylons()
+        await self.expand()
       
     
     async def build_workers(self):
@@ -22,6 +27,44 @@ class r2_sc2(sc2.BotAI):
             if nexuses.exists:
                 if self.can_afford(PYLON):
                     await self.build(PYLON, near=nexuses.first)
+    
+    async def expand(self):
+        if self.units(NEXUS).amount < 2 and self.can_afford(NEXUS):
+            await self.expand_now()
+    
+    async def expand_now(self, max_distance:Union[int, float]=10, building:UnitTypeId=NEXUS, location:Optional[Point2]=None):
+        assert isinstance(building)
+
+        if not location:
+            location = await self.get_next_expansion()
+        
+        if location:
+            await self.build(building, near=location, max_distance=max_distance, random_alternative=False, placement_step=1)
+    
+    async def get_next_expansion(self) -> Optional[Point2]:
+        """Find next expansion location."""
+
+        closest = None
+        distance = math.inf
+        for el in self.expansion_locations:
+            def is_near_to_expansion(t):
+                return t.position.distance_to(el) < self.EXPANSION_GAP_THRESHOLD
+
+            if any(map(is_near_to_expansion, self.townhalls)):
+                # already taken
+                continue
+
+            startp = self._game_info.player_start_location
+            d = await self._client.query_pathing(startp, el)
+            if d is None:
+                continue
+
+            if d < distance:
+                distance = d
+                closest = el
+
+        return closest
+            
 
 
 run_game(maps.get("AbyssalReefLE"), [
