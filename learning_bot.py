@@ -1,7 +1,7 @@
 import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR
+from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER
 from sc2.ids.unit_typeid import UnitTypeId
 from typing import List, Dict, Set, Tuple, Any, Optional, Union # mypy type checking
 from .position import Point2, Point3
