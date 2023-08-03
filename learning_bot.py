@@ -1,7 +1,7 @@
 import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR
+from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER
 from sc2.ids.unit_typeid import UnitTypeId
 from typing import List, Dict, Set, Tuple, Any, Optional, Union # mypy type checking
 from .position import Point2, Point3
@@ -15,6 +15,8 @@ class r2_sc2(sc2.BotAI):
         await self.build_pylons()
         await self.build_assimilator()
         await self.expand()
+        await self.offensive_buildings()
+        await self.build_offensive_force()
 
       
     
@@ -78,8 +80,23 @@ class r2_sc2(sc2.BotAI):
                     break
                 if not self.units(ASSIMILATOR).closer_than(1.0, vespene).exists:
                     await self.do(worker.build(ASSIMILATOR, vespene))
-            
 
+    async def offensive_buildings(self):
+        if self.units(PYLON).ready.exists:
+            pylon = self.units(PYLON).ready.random
+            if self.units(GATEWAY).ready.exists:
+                if not self.units(CYBERNETICSCORE):
+                    if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
+                        await self.build(CYBERNETICSCORE, near=pylon)
+            else:
+                if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
+                    await self.build(GATEWAY, near=pylon)
+
+            
+    async def build_offensive_force(self):
+      for gw in self.units(GATEWAY).ready.noqueue:
+          if self.can_afford(STALKER) and self.supply_left > 0:
+              await self.do(gw.train(STALKER))
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, r2_sc2()),
