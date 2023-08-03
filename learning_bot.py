@@ -15,6 +15,8 @@ class r2_sc2(sc2.BotAI):
         await self.build_pylons()
         await self.build_assimilator()
         await self.expand()
+        await self.offensive_buildings()
+        await self.build_offensive_force()
 
       
     
@@ -91,7 +93,10 @@ class r2_sc2(sc2.BotAI):
                     await self.build(GATEWAY, near=pylon)
 
             
-
+    async def build_offensive_force(self):
+      for gw in self.units(GATEWAY).ready.noqueue:
+          if self.can_afford(STALKER) and self.supply_left > 0:
+              await self.do(gw.train(STALKER))
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, r2_sc2()),
