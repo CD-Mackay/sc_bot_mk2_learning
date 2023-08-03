@@ -78,6 +78,18 @@ class r2_sc2(sc2.BotAI):
                     break
                 if not self.units(ASSIMILATOR).closer_than(1.0, vespene).exists:
                     await self.do(worker.build(ASSIMILATOR, vespene))
+
+    async def offensive_buildings(self):
+        if self.units(PYLON).ready.exists:
+            pylon = self.units(PYLON).ready.random
+            if self.units(GATEWAY).ready.exists:
+                if not self.units(CYBERNETICSCORE):
+                    if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
+                        await self.build(CYBERNETICSCORE, near=pylon)
+            else:
+                if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
+                    await self.build(GATEWAY, near=pylon)
+
             
 
 
