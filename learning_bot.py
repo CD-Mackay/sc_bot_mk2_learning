@@ -6,6 +6,7 @@ from sc2.ids.unit_typeid import UnitTypeId
 from typing import List, Dict, Set, Tuple, Any, Optional, Union # mypy type checking
 # from .position import Point2, Point3
 import math
+import random
 
 
 class r2_sc2(sc2.BotAI):
@@ -13,10 +14,11 @@ class r2_sc2(sc2.BotAI):
         await self.distribute_workers()
         await self.build_workers()
         await self.build_pylons()
-        await self.expand()
         await self.build_assimilator()
+        await self.expand()
         await self.offensive_buildings()
         await self.build_offensive_force()
+        await self.attack()
 
       
     
@@ -32,9 +34,6 @@ class r2_sc2(sc2.BotAI):
                 if self.can_afford(PYLON):
                     await self.build(PYLON, near=nexuses.first)
     
-    async def expand(self):
-        if self.units(NEXUS).amount < 2 and self.can_afford(NEXUS):
-            await self.expand_now()
     
     async def build_assimilator(self):
         for nexus in self.units(NEXUS).ready:
@@ -47,6 +46,10 @@ class r2_sc2(sc2.BotAI):
                     break
                 if not self.units(ASSIMILATOR).closer_than(1.0, vespene).exists:
                     await self.do(worker.build(ASSIMILATOR, vespene))
+
+    async def expand(self):
+      if self.units(NEXUS).amount < 2 and self.can_afford(NEXUS):
+        await self.expand_now()
 
     async def offensive_buildings(self):
         if self.units(PYLON).ready.exists:
@@ -64,6 +67,15 @@ class r2_sc2(sc2.BotAI):
       for gw in self.units(GATEWAY).ready.noqueue:
           if self.can_afford(STALKER) and self.supply_left > 0:
               await self.do(gw.train(STALKER))
+    
+    async def attack(self):
+        if self.units(STALKER).amount > 15:
+            for s in self.units(STALKER):
+                await self.do(s.attack(self.find_target(self.state)))
+        elif self.units(STALKER).amount > 3:
+            if len(self.known_enemy_units) > 0:
+                for s in self.units(STALKER).idle:
+                    await self.do(s.attack(random.choice(self.known_enemy_units)))
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, r2_sc2()),
