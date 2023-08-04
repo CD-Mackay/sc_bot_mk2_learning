@@ -1,7 +1,7 @@
 import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER
+from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY
 import random
 
 
@@ -68,8 +68,14 @@ class r2_sc2(sc2.BotAI):
             
     async def build_offensive_force(self):
       for gw in self.units(GATEWAY).ready.noqueue:
-          if self.can_afford(STALKER) and self.supply_left > 0:
+          if not self.units(STALKER).amount > self.units(VOIDRAY).amount:
+              
+            if self.can_afford(STALKER) and self.supply_left > 0:
               await self.do(gw.train(STALKER))
+
+      for sg in self.units(STARGATE).ready.noqueue:
+          if self.can_afford(VOIDRAY) and self.supply_left > 0:
+              await self.do(sg.train(VOIDRAY))
     
     def find_target(self, state):
         if len(self.known_enemy_units) > 0:
