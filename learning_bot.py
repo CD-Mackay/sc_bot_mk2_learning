@@ -6,6 +6,10 @@ import random
 
 
 class r2_sc2(sc2.BotAI):
+    def __init__(self):
+        self.ITERATIONS_PER_MINUTE = 165
+    
+    
     async def on_step(self, iteration):
         await self.distribute_workers()
         await self.build_workers()
