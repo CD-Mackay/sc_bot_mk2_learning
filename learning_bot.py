@@ -8,6 +8,7 @@ import random
 class r2_sc2(sc2.BotAI):
     def __init__(self):
         self.ITERATIONS_PER_MINUTE = 165
+        self.MAX_WORKERS = 50
     
 
     async def on_step(self, iteration):
@@ -24,9 +25,10 @@ class r2_sc2(sc2.BotAI):
       
     
     async def build_workers(self):
-        for nexus in self.units(NEXUS).ready.noqueue:
-            if self.can_afford(PROBE):
-                await self.do(nexus.train(PROBE))
+        if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
+          for nexus in self.units(NEXUS).ready.noqueue:
+              if self.can_afford(PROBE):
+                  await self.do(nexus.train(PROBE))
 
     async def build_pylons(self):
         if self.supply_left < 5 and not self.already_pending(PYLON):
@@ -49,7 +51,7 @@ class r2_sc2(sc2.BotAI):
                     await self.do(worker.build(ASSIMILATOR, vespene))
 
     async def expand(self):
-      if self.units(NEXUS).amount < 3 and self.can_afford(NEXUS):
+      if self.units(NEXUS).amount < (self.iteration / self.ITERATIONS_PER_MINUTE) and self.can_afford(NEXUS):
         await self.expand_now()
 
     async def offensive_buildings(self):
