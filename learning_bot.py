@@ -61,7 +61,8 @@ class r2_sc2(sc2.BotAI):
             if self.units(GATEWAY).ready.exists and not self.units(CYBERNETICSCORE):
                 if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
                     await self.build(CYBERNETICSCORE, near=pylon)
-            elif len(self.units(GATEWAY)) < (self.iteration / self.ITERATIONS_PER_MINUTE):
+
+            elif len(self.units(GATEWAY)) < ((self.iteration / self.ITERATIONS_PER_MINUTE) / 2):
                 if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
                     await self.build(GATEWAY, near=pylon)
 
@@ -84,14 +85,19 @@ class r2_sc2(sc2.BotAI):
             return random.choice(self.known_enemy_structures)
         else:
             return self.enemy_start_locations[0]
+        
     async def attack(self):
-        if self.units(STALKER).amount > 15:
-            for s in self.units(STALKER).idle:
-                await self.do(s.attack(self.find_target(self.state)))
-        elif self.units(STALKER).amount > 3:
-            if len(self.known_enemy_units) > 0:
-                for s in self.units(STALKER).idle:
-                    await self.do(s.attack(random.choice(self.known_enemy_units)))
+        aggressive_units = {STALKER: [15, 5], VOIDRAY: [8,3]}
+
+        for UNIT in aggressive_units:
+            if self.units(UNIT).amount > aggressive_units[UNIT][0] and self.units(UNIT).amount > aggressive_units[UNIT][1]:
+                for s in self.units(UNIT).idle:
+                    await self.do(s.attack(self.find_target(self.state)))
+            
+            elif self.units(UNIT).amount > aggressive_units[UNIT][1]:
+                if len(self.known_enemy_units) > 0:
+                    for s in self.units(UNIT).idle:
+                        await self.do(s.attack(random.choice(self.known_enemy_units)))
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, r2_sc2()),
