@@ -9,8 +9,9 @@ class r2_sc2(sc2.BotAI):
     def __init__(self):
         self.ITERATIONS_PER_MINUTE = 165
     
-    
+
     async def on_step(self, iteration):
+        self.iteration = iteration
         await self.distribute_workers()
         await self.build_workers()
         await self.build_pylons()
@@ -58,7 +59,7 @@ class r2_sc2(sc2.BotAI):
             if self.units(GATEWAY).ready.exists and not self.units(CYBERNETICSCORE):
                 if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
                     await self.build(CYBERNETICSCORE, near=pylon)
-            else:
+            elif len(self.units(GATEWAY)) < (self.iteration / self.ITERATIONS_PER_MINUTE):
                 if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
                     await self.build(GATEWAY, near=pylon)
 
