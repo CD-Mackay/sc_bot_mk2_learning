@@ -2,10 +2,6 @@ import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
 from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER
-from sc2.ids.unit_typeid import UnitTypeId
-from typing import List, Dict, Set, Tuple, Any, Optional, Union # mypy type checking
-# from .position import Point2, Point3
-import math
 import random
 
 
@@ -37,7 +33,7 @@ class r2_sc2(sc2.BotAI):
     
     async def build_assimilator(self):
         for nexus in self.units(NEXUS).ready:
-            vespenes = self.state.vespene_geyser.closer_than(25.0, nexus)
+            vespenes = self.state.vespene_geyser.closer_than(15.0, nexus)
             for vespene in vespenes:
                 if not self.can_afford(ASSIMILATOR):
                     break
@@ -48,16 +44,16 @@ class r2_sc2(sc2.BotAI):
                     await self.do(worker.build(ASSIMILATOR, vespene))
 
     async def expand(self):
-      if self.units(NEXUS).amount < 2 and self.can_afford(NEXUS):
+      if self.units(NEXUS).amount < 3 and self.can_afford(NEXUS):
         await self.expand_now()
 
     async def offensive_buildings(self):
         if self.units(PYLON).ready.exists:
             pylon = self.units(PYLON).ready.random
-            if self.units(GATEWAY).ready.exists:
-                if not self.units(CYBERNETICSCORE):
-                    if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
-                        await self.build(CYBERNETICSCORE, near=pylon)
+
+            if self.units(GATEWAY).ready.exists and not self.units(CYBERNETICSCORE):
+                if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
+                    await self.build(CYBERNETICSCORE, near=pylon)
             else:
                 if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
                     await self.build(GATEWAY, near=pylon)
@@ -68,9 +64,16 @@ class r2_sc2(sc2.BotAI):
           if self.can_afford(STALKER) and self.supply_left > 0:
               await self.do(gw.train(STALKER))
     
+    def find_target(self, state):
+        if len(self.known_enemy_units) > 0:
+            return random.choice(self.known_enemy_units)
+        elif len(self.known_enemy_structures) > 0:
+            return random.choice(self.known_enemy_structures)
+        else:
+            return self.enemy_start_locations[0]
     async def attack(self):
         if self.units(STALKER).amount > 15:
-            for s in self.units(STALKER):
+            for s in self.units(STALKER).idle:
                 await self.do(s.attack(self.find_target(self.state)))
         elif self.units(STALKER).amount > 3:
             if len(self.known_enemy_units) > 0:
