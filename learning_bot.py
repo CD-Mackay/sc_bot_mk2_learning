@@ -66,6 +66,10 @@ class r2_sc2(sc2.BotAI):
                 if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
                     await self.build(GATEWAY, near=pylon)
 
+            if self.units(CYBERNETICSCORE).ready.exists:
+                if len(self.units(STARGATE)) < ((self.iteration / self.ITERATIONS_PER_MINUTE) / 2):
+                    if self.can_afford(STARGATE) and not self.already_pending(STARGATE):
+                        await self.build(STARGATE, near=pylon)
             
     async def build_offensive_force(self):
       for gw in self.units(GATEWAY).ready.noqueue:
