@@ -28,6 +28,18 @@ class r2_sc2(sc2.BotAI):
 
       
     
+    async def intel(self):
+        game_data = np.zeros((self.game_info.map_size[1], self.game_info.map_size[0], 3), np.uint8)
+        for nexus in self.units(NEXUS):
+            nex_pos = nexus.position
+            print(nex_pos)
+            cv2.circle(game_data, (int(nex_pos[0]), int(nex_pos[1])), 10, (0, 255, 0), -1)
+
+        flipped = cv2.flip(game_data, 0)
+        resized = cv2.resize(flipped, dsize=None, fx=2, fy=2)
+        cv2.imshow('Intel', resized)
+        cv2.waitKey(1)
+    
     async def build_workers(self):
         if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
           for nexus in self.units(NEXUS).ready.noqueue:
