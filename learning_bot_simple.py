@@ -3,6 +3,9 @@ from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
 from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY
 import random
+import cv2
+import numpy as np
+
 
 
 class r2_sc2(sc2.BotAI):
@@ -20,6 +23,7 @@ class r2_sc2(sc2.BotAI):
         await self.expand()
         await self.offensive_buildings()
         await self.build_offensive_force()
+        await self.intel()
         await self.attack()
 
       
@@ -86,17 +90,11 @@ class r2_sc2(sc2.BotAI):
             return self.enemy_start_locations[0]
         
     async def attack(self):
-        aggressive_units = {STALKER: [15, 5], VOIDRAY: [8,3]}
+        aggressive_units = {VOIDRAY: [8,3]}
 
         for UNIT in aggressive_units:
-            if self.units(UNIT).amount > aggressive_units[UNIT][0] and self.units(UNIT).amount > aggressive_units[UNIT][1]:
-                for s in self.units(UNIT).idle:
-                    await self.do(s.attack(self.find_target(self.state)))
-            
-            elif self.units(UNIT).amount > aggressive_units[UNIT][1]:
-                if len(self.known_enemy_units) > 0:
-                    for s in self.units(UNIT).idle:
-                        await self.do(s.attack(random.choice(self.known_enemy_units)))
+            for s in self.units(UNIT).idle:
+                await self.do(s.attack(self.find_target(self.state)))
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, r2_sc2()),
