@@ -72,11 +72,6 @@ class r2_sc2(sc2.BotAI):
                         await self.build(STARGATE, near=pylon)
             
     async def build_offensive_force(self):
-      for gw in self.units(GATEWAY).ready.noqueue:
-          if not self.units(STALKER).amount > self.units(VOIDRAY).amount:
-              
-            if self.can_afford(STALKER) and self.supply_left > 0:
-              await self.do(gw.train(STALKER))
 
       for sg in self.units(STARGATE).ready.noqueue:
           if self.can_afford(VOIDRAY) and self.supply_left > 0:
