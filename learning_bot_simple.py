@@ -1,7 +1,7 @@
 import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY, ROBOTICSFACILITY
+from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY, ROBOTICSFACILITY, OBSERVER
 import random
 import cv2
 import numpy as np
@@ -16,6 +16,7 @@ class r2_sc2(sc2.BotAI):
 
     async def on_step(self, iteration):
         self.iteration = iteration
+        await self.scout()
         await self.distribute_workers()
         await self.build_workers()
         await self.build_pylons()
@@ -27,7 +28,20 @@ class r2_sc2(sc2.BotAI):
         await self.attack()
 
       
-    
+    async def scout(self):
+        if len(self.units(OBSERVER)) > 0:
+            scout = self.units(OBSERVER)[0]
+            if scout.is_idle:
+                enemy_location = self.enemy_start_locations[0]
+                move_to = self.random_location_variance(enemy_location)
+                await self.do(scout.move(move_to))
+        
+        else:
+            for rf in self.units(ROBOTICSFACILITY).ready.noqueue:
+                if self.can_afford(OBSERVER) and self.supply_left > 0:
+                    await self.do(rf.train(OBSERVER))
+    def random_location_variance(self, enemy_start_location):
+        
     async def intel(self):
         game_data = np.zeros((self.game_info.map_size[1], self.game_info.map_size[0], 3), np.uint8)
         for nexus in self.units(NEXUS):
