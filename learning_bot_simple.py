@@ -39,6 +39,22 @@ class r2_sc2(sc2.BotAI):
         resized = cv2.resize(flipped, dsize=None, fx=2, fy=2)
         cv2.imshow('Intel', resized)
         cv2.waitKey(1)
+        draw_dict = {
+                     NEXUS: [15, (0, 255, 0)],
+                     PYLON: [3, (20, 235, 0)],
+                     PROBE: [1, (55, 200, 0)],
+                     ASSIMILATOR: [2, (55, 200, 0)],
+                     GATEWAY: [3, (200, 100, 0)],
+                     CYBERNETICSCORE: [3, (150, 150, 0)],
+                     STARGATE: [5, (255, 0, 0)],
+                     VOIDRAY: [3, (255, 100, 0)],
+                    }
+        
+        for unit_type in draw_dict:
+            for unit in self.units(unit_type).ready:
+                pos = unit.position
+                cv2.circle(game_data, (int(pos[0]), int(pos[1])), draw_dict[unit_type[0]], draw_dict[unit_type][1], -1)
+
     
     async def build_workers(self):
         if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
