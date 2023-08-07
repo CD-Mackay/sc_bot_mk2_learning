@@ -57,6 +57,7 @@ class r2_sc2(sc2.BotAI):
             y = self.game_info.map_size[1]
         
         go_to = position.Point2(position.PointLike((x, y)))
+        return go_to
         
     async def intel(self):
         game_data = np.zeros((self.game_info.map_size[1], self.game_info.map_size[0], 3), np.uint8)
@@ -78,6 +79,7 @@ class r2_sc2(sc2.BotAI):
                      CYBERNETICSCORE: [3, (150, 150, 0)],
                      STARGATE: [5, (255, 0, 0)],
                      VOIDRAY: [3, (255, 100, 0)],
+                     ROBOTICSFACILITY: [5, (215, 155, 0)]
                     }
         
         for unit_type in draw_dict:
@@ -103,6 +105,11 @@ class r2_sc2(sc2.BotAI):
                     cv2.circle(game_data, (int(pos[0]), int(pos[1])), 1, (55, 0, 155), -1)
                 else:
                     cv2.circle(game_data, (int(pos[0]), int(pos[1])), 3, (50, 0, 215), -1)
+        
+        for obs in self.units(OBSERVER).ready:
+            pos = obs.position
+            cv2.circle(game_data, (int(pos[0]), int(pos[1])), 1, (255, 255, 255), -1)
+
 
 
 
