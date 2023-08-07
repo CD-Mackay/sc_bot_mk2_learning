@@ -54,6 +54,17 @@ class r2_sc2(sc2.BotAI):
             for unit in self.units(unit_type).ready:
                 pos = unit.position
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), draw_dict[unit_type[0]], draw_dict[unit_type][1], -1)
+        
+        main_base_name = ["nexus", "commandcenter", "hatchery"]
+        for enemy_building in self.known_enemy_structures:
+            pos = enemy_building.position
+            if enemy_building.name.lower() not in main_base_name:
+                cv2.circle(game_data, (int(pos[0]), int(pos[1])), 5, (200, 50, 212), -1)
+        for enemy_building in self.known_enemy_structures:
+            pos = enemy_building.position
+            if enemy_building.name.lower() in main_base_name:
+                cv2.circle(game_data, (int(pos[0]), int(pos[1])), 15, (0, 0, 225), -1)
+
 
     
     async def build_workers(self):
