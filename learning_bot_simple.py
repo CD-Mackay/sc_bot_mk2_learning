@@ -1,7 +1,7 @@
 import sc2
 from sc2 import run_game, maps, Race, Difficulty
 from sc2.player import Bot, Computer
-from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY
+from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY, ROBOTICSFACILITY
 import random
 import cv2
 import numpy as np
@@ -73,7 +73,7 @@ class r2_sc2(sc2.BotAI):
                     cv2.circle(game_data, (int(pos[0]), int(pos[1])), 1, (55, 0, 155), -1)
                 else:
                     cv2.circle(game_data, (int(pos[0]), int(pos[1])), 3, (50, 0, 215), -1)
-                    
+
 
 
     
@@ -118,6 +118,11 @@ class r2_sc2(sc2.BotAI):
             elif len(self.units(GATEWAY)) < 1:
                 if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
                     await self.build(GATEWAY, near=pylon)
+
+            if self.units(CYBERNETICSCORE).ready.exists:
+                if len(self.units(ROBOTICSFACILITY)) < 1:
+                    if self.can_afford(ROBOTICSFACILITY) and not self.already_pending(ROBOTICSFACILITY):
+                        await self.build(ROBOTICSFACILITY, near=pylon)
 
             if self.units(CYBERNETICSCORE).ready.exists:
                 if len(self.units(STARGATE)) < ((self.iteration / self.ITERATIONS_PER_MINUTE)):
