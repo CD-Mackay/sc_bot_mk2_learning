@@ -63,7 +63,6 @@ class r2_sc2(sc2.BotAI):
         game_data = np.zeros((self.game_info.map_size[1], self.game_info.map_size[0], 3), np.uint8)
         for nexus in self.units(NEXUS):
             nex_pos = nexus.position
-            print(nex_pos)
             cv2.circle(game_data, (int(nex_pos[0]), int(nex_pos[1])), 10, (0, 255, 0), -1)
 
         flipped = cv2.flip(game_data, 0)
@@ -85,10 +84,12 @@ class r2_sc2(sc2.BotAI):
         for unit_type in draw_dict:
             for unit in self.units(unit_type).ready:
                 pos = unit.position
+                print("unit position!!", pos)
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), draw_dict[unit_type][0], draw_dict[unit_type][1], -1)
         main_base_name = ["nexus", "commandcenter", "hatchery"]
         for enemy_building in self.known_enemy_structures:
             pos = enemy_building.position
+            print("enemy building position!!", pos)
             if enemy_building.name.lower() not in main_base_name:
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), 5, (200, 50, 212), -1)
 
@@ -101,6 +102,7 @@ class r2_sc2(sc2.BotAI):
             if not enemy_unit.is_structure:
                 worker_names = ["probe", "scv", "drone"]
                 pos = enemy_unit.position
+                print("enemy unit!!", pos)
                 if enemy_unit.name.lower() in worker_names:
                     cv2.circle(game_data, (int(pos[0]), int(pos[1])), 1, (55, 0, 155), -1)
                 else:
