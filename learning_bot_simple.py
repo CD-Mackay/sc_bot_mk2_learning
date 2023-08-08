@@ -6,12 +6,15 @@ import random
 import cv2
 import numpy as np
 
-
+HEADLESS = False
 
 class r2_sc2(sc2.BotAI):
     def __init__(self):
         self.ITERATIONS_PER_MINUTE = 165
         self.MAX_WORKERS = 50
+        self.do_something_after = 0
+        self.train_data = []
+
     
 
     async def on_step(self, iteration):
@@ -131,10 +134,11 @@ class r2_sc2(sc2.BotAI):
         
         
 
-        flipped = cv2.flip(game_data, 0)
-        resized = cv2.resize(flipped, dsize=None, fx=2, fy=2)
-        cv2.imshow('Intel', resized)
-        cv2.waitKey(1)
+        self.flipped = cv2.flip(game_data, 0)
+        if not HEADLESS:  
+          resized = cv2.resize(self.flipped, dsize=None, fx=2, fy=2)
+          cv2.imshow('Intel', resized)
+          cv2.waitKey(1)
 
 
     
@@ -236,7 +240,7 @@ class r2_sc2(sc2.BotAI):
               y[choice] = 1
               print("y:", y)
               self.train_data.append([y.self.flipped])
-              
+
             
 
 run_game(maps.get("AbyssalReefLE"), [
