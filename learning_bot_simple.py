@@ -1,8 +1,9 @@
 import sc2
-from sc2 import run_game, maps, Race, Difficulty, position
+from sc2 import run_game, maps, Race, Difficulty, position, Result
 from sc2.player import Bot, Computer
 from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY, ROBOTICSFACILITY, OBSERVER
 import random
+import time
 import cv2
 import numpy as np
 
@@ -15,7 +16,13 @@ class r2_sc2(sc2.BotAI):
         self.do_something_after = 0
         self.train_data = []
 
-    
+    def on_end(self, game_result):
+        print('---on_end called---')
+        print(game_result)
+
+        if game_result == Result.Victory:
+          np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(self.train_data))
+
 
     async def on_step(self, iteration):
         self.iteration = iteration
@@ -209,7 +216,7 @@ class r2_sc2(sc2.BotAI):
             return self.enemy_start_locations[0]
         
     async def attack(self):
-      if len(self.units(VOIDRAY)).idle > 0:
+      if len(self.units(VOIDRAY).idle) > 0:
           choice = random.randrange(0,4)
           target = False
           if self.iteration > self.do_something_after:
@@ -239,7 +246,7 @@ class r2_sc2(sc2.BotAI):
               y = np.zeros(4)
               y[choice] = 1
               print("y:", y)
-              self.train_data.append([y.self.flipped])
+              self.train_data.append([y, self.flipped])
 
             
 
