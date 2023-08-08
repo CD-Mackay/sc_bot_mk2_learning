@@ -104,6 +104,33 @@ class r2_sc2(sc2.BotAI):
             pos = obs.position
             cv2.circle(game_data, (int(pos[0]), int(pos[1])), 1, (255, 255, 255), -1)
 
+        
+        line_max = 50
+        mineral_ratio = self.minerals / 1500
+        if mineral_ratio > 1.0:
+            mineral_ratio = 1.0
+        vespene_ratio = self.vespene / 1500
+        if vespene_ratio > 1.0:
+            vespene_ratio = 1.0
+        
+        population_ratio = self.supply_left / self.supply_cap
+        if population_ratio > 1.0:
+            population_ratio = 1.0
+        
+        plausible_supply = self.supply_cap / 200.0
+
+        military_weight = len(self.units(VOIDRAY)) / (self.supply_cap - self.supply_left)
+        if military_weight > 1.0:
+            military_weight = 1.0
+            
+        cv2.line(game_data, (0, 19), (int(line_max*military_weight), 19), (250, 250, 200), 3)  # worker/supply ratio
+        cv2.line(game_data, (0, 15), (int(line_max*plausible_supply), 15), (220, 200, 200), 3)  # plausible supply (supply/200.0)
+        cv2.line(game_data, (0, 11), (int(line_max*population_ratio), 11), (150, 150, 150), 3)  # population ratio (supply_left/supply)
+        cv2.line(game_data, (0, 7), (int(line_max*vespene_ratio), 7), (210, 200, 0), 3)  # gas / 1500
+        cv2.line(game_data, (0, 3), (int(line_max*mineral_ratio), 3), (0, 255, 25), 3)  # minerals minerals/1500
+        
+        
+
         flipped = cv2.flip(game_data, 0)
         resized = cv2.resize(flipped, dsize=None, fx=2, fy=2)
         cv2.imshow('Intel', resized)
