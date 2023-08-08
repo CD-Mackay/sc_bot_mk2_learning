@@ -37,7 +37,7 @@ class r2_sc2(sc2.BotAI):
                 await self.do(scout.move(move_to))
         
         else:
-            for rf in self.units(ROBOTICSFACILITY).ready.noqueue:
+            for rf in self.units(ROBOTICSFACILITY).ready.idle:
                 if self.can_afford(OBSERVER) and self.supply_left > 0:
                     await self.do(rf.train(OBSERVER))
 
@@ -113,7 +113,7 @@ class r2_sc2(sc2.BotAI):
     
     async def build_workers(self):
         if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
-          for nexus in self.units(NEXUS).ready.noqueue:
+          for nexus in self.units(NEXUS).ready.idle:
               if self.can_afford(PROBE):
                   await self.do(nexus.train(PROBE))
 
@@ -165,7 +165,7 @@ class r2_sc2(sc2.BotAI):
             
     async def build_offensive_force(self):
 
-      for sg in self.units(STARGATE).ready.noqueue:
+      for sg in self.units(STARGATE).ready.idle:
           if self.can_afford(VOIDRAY) and self.supply_left > 0:
               await self.do(sg.train(VOIDRAY))
     
