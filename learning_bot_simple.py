@@ -21,6 +21,8 @@ class r2_sc2(sc2.BotAI):
         print(game_result)
 
         if game_result == Result.Victory:
+          print("FIRST:", "train_data/{}.npy".format(str(int(time.time()))))
+          print("SECOND:", self.train_data)
           np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(self.train_data))
 
 
