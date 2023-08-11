@@ -252,7 +252,12 @@ class r2_sc2(sc2.BotAI):
               print("y:", y)
               self.train_data.append([y, self.flipped])
 
-run_game(maps.get("AbyssalReefLE"), [
-    Bot(Race.Protoss, r2_sc2()),
-    Computer(Race.Terran, Difficulty.Easy)
-], realtime=False)
+counter = 0
+
+while counter < 5:
+    
+  run_game(maps.get("AbyssalReefLE"), [
+      Bot(Race.Protoss, r2_sc2()),
+      Computer(Race.Terran, Difficulty.Easy)
+  ], realtime=False)
+  counter+=1 
