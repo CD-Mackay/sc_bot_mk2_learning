@@ -254,5 +254,5 @@ class r2_sc2(sc2.BotAI):
 
 run_game(maps.get("AbyssalReefLE"), [
     Bot(Race.Protoss, r2_sc2()),
-    Computer(Race.Terran, Difficulty.Hard)
+    Computer(Race.Terran, Difficulty.Easy)
 ], realtime=False)
