@@ -23,11 +23,8 @@ class r2_sc2(sc2.BotAI):
         if game_result == Result.Victory:
           print("FIRST:", "train_data/{}.npy".format(str(int(time.time()))))
           print("SECOND:", self.train_data)
-          train_array = self.train_data
-          train_list = train_array.tolist()
-          np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(train_list))
-          ## train_data is inhomogenous shape, throws Numpy error. 
-          ## Is is neccessary to clone git repo in order to resolve this?
+
+          np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(self.train_data, dtype=object))
 
 
 
@@ -255,9 +252,12 @@ class r2_sc2(sc2.BotAI):
               print("y:", y)
               self.train_data.append([y, self.flipped])
 
-            
 
-run_game(maps.get("AbyssalReefLE"), [
-    Bot(Race.Protoss, r2_sc2()),
-    Computer(Race.Terran, Difficulty.Easy)
-], realtime=False)
+counter = 0
+
+while counter < 5:
+  run_game(maps.get("AbyssalReefLE"), [
+      Bot(Race.Protoss, r2_sc2()),
+      Computer(Race.Terran, Difficulty.Easy)
+  ], realtime=False)
+  counter+=1
