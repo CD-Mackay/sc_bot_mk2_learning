@@ -23,11 +23,8 @@ class r2_sc2(sc2.BotAI):
         if game_result == Result.Victory:
           print("FIRST:", "train_data/{}.npy".format(str(int(time.time()))))
           print("SECOND:", self.train_data)
-          train_array = self.train_data
-          train_list = train_array.tolist()
-          np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(train_list))
-          ## train_data is inhomogenous shape, throws Numpy error. 
-          ## Is is neccessary to clone git repo in order to resolve this?
+
+          np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(self.train_data, dtype=object))
 
 
 
