@@ -6,6 +6,7 @@ import random
 import time
 import cv2
 import numpy as np
+from examples.terran.proxy_rax import ProxyRaxBot
 
 HEADLESS = False
 
@@ -258,6 +259,6 @@ while counter < 5:
     
   run_game(maps.get("AbyssalReefLE"), [
       Bot(Race.Protoss, r2_sc2()),
-      Computer(Race.Terran, Difficulty.Easy)
+      Computer(Race.Terran, ProxyRaxBot())
   ], realtime=False)
   counter+=1 
