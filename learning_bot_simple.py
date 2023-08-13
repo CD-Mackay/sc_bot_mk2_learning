@@ -259,6 +259,7 @@ while counter < 5:
     
   run_game(maps.get("AbyssalReefLE"), [
       Bot(Race.Protoss, r2_sc2()),
-      Computer(Race.Terran, ProxyRaxBot())
+      # Bot(Race.Terran, ProxyRaxBot())
+      Computer(Race.Terran, Difficulty.Easy)
   ], realtime=False)
   counter+=1 
