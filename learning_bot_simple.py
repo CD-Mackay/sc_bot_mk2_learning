@@ -7,20 +7,33 @@ import time
 import cv2
 import numpy as np
 from examples.terran.proxy_rax import ProxyRaxBot
+import keras
 
 HEADLESS = False
 
 class r2_sc2(sc2.BotAI):
-    def __init__(self):
+    def __init__(self, use_model=False):
         self.ITERATIONS_PER_MINUTE = 165
         self.MAX_WORKERS = 50
         self.do_something_after = 0
         self.train_data = []
+        self.use_model = use_model
+
+        if self.use_model:
+            print("USING MODEL!")
+            self.model = keras.models.load_model("BasicCNN-30-epochs-0.0001-LR-4.2")
 
     def on_end(self, game_result):
         print('---on_end called---')
-        print(game_result)
+        print(game_result, self.use_model)
 
+
+        with open("log.txt","a") as f:
+            if self.use_model:
+                f.write("Model {}\n".format(game_result))
+            else:
+                f.write("Random {}\n".format(game_result))
+                
         if game_result == Result.Victory:
           np.save("train_data/{}.npy".format(str(int(time.time()))), np.array(self.train_data, dtype=object))
 
