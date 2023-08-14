@@ -46,3 +46,39 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 tensorboard = TensorBoard(log_dir='logs/stage1')
+
+hm_epochs = 10
+
+for i in range(hm_epochs):
+    current = 0
+    increment = 200
+    not_maximum = True
+    all_files = os.listdir(train_data_dir)
+    maximum = len(all_files)
+    random.shuffle(all_files)
+
+    while not_maximum:
+      print("WORKING ON {}:{}".format(current, current+increment))
+      no_attacks = []
+      attack_closest_to_nexus = []
+      attack_enemy_structures = []
+      attack_enemy_start = []
+
+      for file in all_files[current:current+increment]:
+         full_path = os.path.join(train_data_dir, file)
+         data = np.load(full_path)
+         data = list(data)
+         for d in data:
+            choice = np.argmax(d[0])
+            if choice == 0:
+               no_attacks.append([d[0], d[1]])
+            elif choice == 1:
+               attack_closest_to_nexus.append([d[0], d[1]])
+            elif choice == 2:
+               attack_enemy_structures.append([d[0], d[1]])
+            elif choice == 3:
+               attack_enemy_start.append([d[0], d[1]])
+            
+
+        
+
