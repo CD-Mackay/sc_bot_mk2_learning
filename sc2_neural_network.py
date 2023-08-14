@@ -97,6 +97,29 @@ for i in range(hm_epochs):
                attack_enemy_structures.append([d[0], d[1]])
             elif choice == 3:
                attack_enemy_start.append([d[0], d[1]])
+
+      lengths = check_data()
+      lowest_data = min(lengths)
+      random.shuffle(no_attacks)
+      random.shuffle(attack_closest_to_nexus)
+      random.shuffle(attack_enemy_start)
+      random.shuffle(attack_enemy_structures)
+
+      no_attacks = no_attacks[:lowest_data]
+      attack_closest_to_nexus = attack_closest_to_nexus[:lowest_data]
+      attack_enemy_structures = attack_enemy_structures[:lowest_data]
+      attack_enemy_start = attack_enemy_start[:lowest_data]
+
+      check_data()
+
+      train_data = no_attacks + attack_closest_to_nexus + attack_enemy_structures + attack_enemy_start
+      random.shuffle(train_data)
+      test_size = 100
+      batch_size = 128
+
+      x_train = np.array(i[1] for i in train_data[:-test_size]).reshape(-1, 17)
+
+
             
 
         
