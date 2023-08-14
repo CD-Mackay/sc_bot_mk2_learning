@@ -49,6 +49,25 @@ tensorboard = TensorBoard(log_dir='logs/stage1')
 
 hm_epochs = 10
 
+def check_data():
+   choices = {
+      'no_attacks': no_attacks,
+      'attack_closest_to_nexus': attack_closest_to_nexus,
+      'attack_enemy_structures': attack_enemy_structures,
+      'attack_enemy_start': attack_enemy_start
+   }
+
+   total_data = 0
+
+   lengths = []
+   for choice in choices:
+      print("Length of {} is: {}".format(choice, len(choices[choice])))
+      total_data+=len(choices[choice])
+      lengths.append(len(choices[choice]))
+
+   return lengths
+
+
 for i in range(hm_epochs):
     current = 0
     increment = 200
