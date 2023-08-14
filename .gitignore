@@ -1,3 +1,5 @@
 opencv-python-4.5.3.56
 opencv.tar.gz
 python-sc2
+train_data
+.DS_Store
