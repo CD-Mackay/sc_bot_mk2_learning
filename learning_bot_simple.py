@@ -21,7 +21,7 @@ class r2_sc2(sc2.BotAI):
 
         if self.use_model:
             print("USING MODEL!")
-            self.model = keras.models.load_model("BasicCNN-30-epochs-0.0001-LR-4.2")
+            self.model = keras.models.load_model("BasicCNN-30-epochs-0.0001-LR-STAGE1")
 
     def on_end(self, game_result):
         print('---on_end called---')

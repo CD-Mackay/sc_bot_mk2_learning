@@ -39,7 +39,7 @@ model.add(Dropout(0.5))
 model.add(Dense(4, activation='softmax'))
 
 learning_rate = 0.0001
-opt = keras.optimizers.adam(lr=learning_rate, decay=1e-6)
+opt = keras.optimizers.legacy.Adam(lr=learning_rate, decay=1e-6)
 
 model.compile(loss='categorical_crossentropy',
               optimizer=opt,
@@ -124,6 +124,7 @@ for i in range(hm_epochs):
       y_test = np.array([i[0] for i in train_data[-test_size:]])
 
       model.fit(x_train, y_train, batch_size=batch_size, validation_data=(x_test, y_test), shuffle=True, verbose=1, callbacks=[tensorboard])
+      print("MODEL NAME:", "BasicCNN-{}-epochs-{}-LR-STAGE1".format(hm_epochs, learning_rate))
       model.save("BasicCNN-{}-epochs-{}-LR-STAGE1".format(hm_epochs, learning_rate))
       current += increment
       if current > maximum:
