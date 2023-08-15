@@ -47,7 +47,7 @@ model.compile(loss='categorical_crossentropy',
 
 tensorboard = TensorBoard(log_dir='logs/stage1')
 
-hm_epochs = 10
+hm_epochs = 30
 
 def check_data():
    choices = {
