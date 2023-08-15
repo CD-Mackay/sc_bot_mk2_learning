@@ -232,9 +232,20 @@ class r2_sc2(sc2.BotAI):
         
     async def attack(self):
       if len(self.units(VOIDRAY).idle) > 0:
-          choice = random.randrange(0,4)
           target = False
           if self.iteration > self.do_something_after:
+              if self.use_model:
+                  prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
+                  choice = np.argmax(prediction[0])
+                  choice_dict = {
+                      0: "no attack",
+                      1: "attack close to nexus",
+                      2: "attack enemy structure",
+                      3: "attack enemy start"
+                  }
+                  print("Choice #{}:{}".format(choice, choice_dict[choice]))
+              else:
+                choice = random.randrange(0,4)
               if choice == 0:
                   ## No attack
                   wait = random.randrange(20, 165)
