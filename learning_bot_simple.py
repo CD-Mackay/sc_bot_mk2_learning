@@ -279,7 +279,7 @@ counter = 0
 while counter < 5:
     
   run_game(maps.get("AbyssalReefLE"), [
-      Bot(Race.Protoss, r2_sc2()),
+      Bot(Race.Protoss, r2_sc2(use_model=True)),
       Computer(Race.Terran, Difficulty.Easy)
   ], realtime=False)
   counter+=1 
