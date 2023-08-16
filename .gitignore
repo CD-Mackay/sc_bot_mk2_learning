@@ -3,3 +3,5 @@ opencv.tar.gz
 python-sc2
 train_data
 .DS_Store
+BasicCNN-30-epochs-0.0001-LR-STAGE1
+logs/stage1
