@@ -39,7 +39,7 @@ model.add(Dropout(0.5))
 model.add(Dense(4, activation='softmax'))
 
 learning_rate = 0.0001
-opt = keras.optimizers.adam(lr=learning_rate, decay=1e-6)
+opt = keras.optimizers.legacy.Adam(learning_rate=learning_rate, decay=1e-6)
 
 model.compile(loss='categorical_crossentropy',
               optimizer=opt,
@@ -47,7 +47,7 @@ model.compile(loss='categorical_crossentropy',
 
 tensorboard = TensorBoard(log_dir='logs/stage1')
 
-hm_epochs = 10
+hm_epochs = 30
 
 def check_data():
    choices = {
@@ -74,6 +74,7 @@ for i in range(hm_epochs):
     not_maximum = True
     all_files = os.listdir(train_data_dir)
     maximum = len(all_files)
+    print("maximum:", maximum)
     random.shuffle(all_files)
 
     while not_maximum:
@@ -85,7 +86,7 @@ for i in range(hm_epochs):
 
       for file in all_files[current:current+increment]:
          full_path = os.path.join(train_data_dir, file)
-         data = np.load(full_path)
+         data = np.load(full_path, allow_pickle=True)
          data = list(data)
          for d in data:
             choice = np.argmax(d[0])
@@ -117,13 +118,14 @@ for i in range(hm_epochs):
       test_size = 100
       batch_size = 128
 
-      x_train = np.array(i[1] for i in train_data[:-test_size]).reshape(-1, 176, 200, 3)
+      x_train = np.array([i[1] for i in train_data[:-test_size]]).reshape(-1, 176, 200, 3)
       y_train = np.array([i[0] for i in train_data[:-test_size]])
 
       x_test = np.array([i[1] for i in train_data[-test_size:]]).reshape(-1, 176, 200, 3)
       y_test = np.array([i[0] for i in train_data[-test_size:]])
 
       model.fit(x_train, y_train, batch_size=batch_size, validation_data=(x_test, y_test), shuffle=True, verbose=1, callbacks=[tensorboard])
+      print("MODEL NAME:", "BasicCNN-{}-epochs-{}-LR-STAGE1".format(hm_epochs, learning_rate))
       model.save("BasicCNN-{}-epochs-{}-LR-STAGE1".format(hm_epochs, learning_rate))
       current += increment
       if current > maximum:
