@@ -12,3 +12,7 @@ learning_bot_simple:
 
 sc2_neural_network:
   - The neural network model for running the learning_bot_simple script. inputs training data from thousands of games against medium A.I. opposition, and takes control over decision making in-game. 
+
+
+## To-dos
+  - Finish training neural network (30 epochs takes alot of time and processing power)
