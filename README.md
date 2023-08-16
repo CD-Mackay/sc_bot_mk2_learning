@@ -9,4 +9,10 @@ learning_bot_base:
 
 learning_bot_simple:
   - The first iteration of a StarCraft bot with evolutionary learning. Started as a simplified version of learning_bot_base, and will expand to include evolutionary learning protocols to improve performance.
-  
+
+sc2_neural_network:
+  - The neural network model for running the learning_bot_simple script. inputs training data from thousands of games against medium A.I. opposition, and takes control over decision making in-game. 
+
+
+## To-dos
+  - Finish training neural network (30 epochs takes alot of time and processing power)
