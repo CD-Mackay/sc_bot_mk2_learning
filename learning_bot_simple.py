@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 from examples.terran.proxy_rax import ProxyRaxBot
 import keras
+import math
 
 HEADLESS = False
 
