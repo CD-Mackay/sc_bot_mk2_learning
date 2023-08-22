@@ -18,6 +18,7 @@ class r2_sc2(sc2.BotAI):
         self.do_something_after = 0
         self.train_data = []
         self.use_model = use_model
+        self.scouts_and_spots = {}
 
         if self.use_model:
             print("USING MODEL!")
@@ -55,17 +56,23 @@ class r2_sc2(sc2.BotAI):
 
       
     async def scout(self):
-        if len(self.units(OBSERVER)) > 0:
-            scout = self.units(OBSERVER)[0]
-            if scout.is_idle:
-                enemy_location = self.enemy_start_locations[0]
-                move_to = self.random_location_variance(enemy_location)
-                await self.do(scout.move(move_to))
+        self.expand_dis_dir = {}
+        for el in self.expansion_locations:
+            distance_to_enemy_start = el.distance_to(self.enemy_start_locations[0])
+            self.expand_dis_dir[distance_to_enemy_start] = el
         
-        else:
-            for rf in self.units(ROBOTICSFACILITY).ready.idle:
-                if self.can_afford(OBSERVER) and self.supply_left > 0:
-                    await self.do(rf.train(OBSERVER))
+        self.ordered_exp_distances = sorted(k for k in self.expand_dis_dir)
+        # if len(self.units(OBSERVER)) > 0:
+        #     scout = self.units(OBSERVER)[0]
+        #     if scout.is_idle:
+        #         enemy_location = self.enemy_start_locations[0]
+        #         move_to = self.random_location_variance(enemy_location)
+        #         await self.do(scout.move(move_to))
+        
+        # else:
+        #     for rf in self.units(ROBOTICSFACILITY).ready.idle:
+        #         if self.can_afford(OBSERVER) and self.supply_left > 0:
+        #             await self.do(rf.train(OBSERVER))
 
     def random_location_variance(self, enemy_start_location):
         x = enemy_start_location[0]
