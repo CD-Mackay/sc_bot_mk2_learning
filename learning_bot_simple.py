@@ -219,7 +219,12 @@ class r2_sc2(sc2.BotAI):
           cv2.imshow('Intel', resized)
           cv2.waitKey(1)
 
-
+    async def build_scout(self):
+        if len(self.units(OBSERVER)) < math.floor(self.time / 3):
+            for rf in self.units(ROBOTICSFACILITY).ready.idle:
+                if self.can_afford(OBSERVER) and self.supply_left > 0:
+                    await self.do(rf.train(OBSERVER))
+            
     
     async def build_workers(self):
         if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
