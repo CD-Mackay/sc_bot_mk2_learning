@@ -162,7 +162,7 @@ class r2_sc2(sc2.BotAI):
                 pos = unit.position
                 cv2.circle(game_data, (int(pos[0]), int(pos[1])), draw_dict[unit_type][0], draw_dict[unit_type][1], -1)
 
-        main_base_names = ['nexus', 'commandcenter', 'orbitalcommand', 'planetaryfortress', 'hatchery']
+        main_base_name = ['nexus', 'commandcenter', 'orbitalcommand', 'planetaryfortress', 'hatchery']
         for enemy_building in self.known_enemy_structures:
             pos = enemy_building.position
             if enemy_building.name.lower() not in main_base_name:
