@@ -13,7 +13,7 @@ HEADLESS = False
 
 class r2_sc2(sc2.BotAI):
     def __init__(self, use_model=False):
-        self.ITERATIONS_PER_MINUTE = 165
+        # self.ITERATIONS_PER_MINUTE = 165
         self.MAX_WORKERS = 50
         self.do_something_after = 0
         self.train_data = []
@@ -40,7 +40,8 @@ class r2_sc2(sc2.BotAI):
 
 
     async def on_step(self, iteration):
-        self.iteration = iteration
+        # self.iteration = iteration
+        self.time = (self.state.game_loop / 22.4) / 60
         await self.scout()
         await self.distribute_workers()
         await self.build_workers()
@@ -248,8 +249,8 @@ class r2_sc2(sc2.BotAI):
                 choice = random.randrange(0,4)
               if choice == 0:
                   ## No attack
-                  wait = random.randrange(20, 165)
-                  self.do_something_after = self.iteration + wait
+                  wait = random.randrange(7, 100) / 100
+                  self.do_something_after = self.time + wait
               
               elif choice == 1:
                   ## attack enemy unit closest to nexus
