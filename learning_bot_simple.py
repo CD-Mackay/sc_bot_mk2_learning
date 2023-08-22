@@ -70,6 +70,44 @@ class r2_sc2(sc2.BotAI):
         
         for scout in to_be_removed:
             del self.scouts_and_spots[scout]
+
+        if len(self.units(ROBOTICSFACILITY).ready) == 0:
+            unit_type = PROBE
+            unit_limit = 1
+        else:
+            unit_type = OBSERVER
+            unit_limit = 15
+        
+        assign_scout = True
+        if unit_type == PROBE:
+            for unit in self.units(PROBE):
+                if unit.tag in self.scouts_and_spots:
+                    assign_scout = False
+        
+        if assign_scout:
+            if len(self.units(unit_type).idle) > 0:
+                for obs in self.units(unit_type).idle[:unit_limit]:
+                    if obs.tag not in self.scouts_and_spots:
+                        for dist in self.ordered_exp_distances:
+                            try:
+                              location = next(value for key, value in self.expand_dis_dir.items() if key == dist)
+                              active_locations = [self.scouts_and_spots[k] for k in self.scouts_and_spots]
+
+                              if location not in active_locations:
+                                  if unit_type == PROBE:
+                                      for unit in self.units(PROBE):
+                                          if unit.tag in self.scouts_and_spots:
+                                              continue
+                                  
+                                  await self.do(obs.move(location))
+                                  self.scouts_and_spots[obs.tag] = location
+                                  break
+                            except Exception as e:
+                                pass
+
+
+            
+          
         # if len(self.units(OBSERVER)) > 0:
         #     scout = self.units(OBSERVER)[0]
         #     if scout.is_idle:
