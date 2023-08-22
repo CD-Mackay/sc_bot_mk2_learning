@@ -192,7 +192,7 @@ class r2_sc2(sc2.BotAI):
                     await self.do(worker.build(ASSIMILATOR, vespene))
 
     async def expand(self):
-      if self.units(NEXUS).amount < (self.iteration / self.ITERATIONS_PER_MINUTE) and self.can_afford(NEXUS):
+      if self.units(NEXUS).amount < self.time/2 and self.can_afford(NEXUS):
         await self.expand_now()
 
     async def offensive_buildings(self):
@@ -213,7 +213,7 @@ class r2_sc2(sc2.BotAI):
                         await self.build(ROBOTICSFACILITY, near=pylon)
 
             if self.units(CYBERNETICSCORE).ready.exists:
-                if len(self.units(STARGATE)) < ((self.iteration / self.ITERATIONS_PER_MINUTE)):
+                if len(self.units(STARGATE)) < self.time:
                     if self.can_afford(STARGATE) and not self.already_pending(STARGATE):
                         await self.build(STARGATE, near=pylon)
             
@@ -234,7 +234,7 @@ class r2_sc2(sc2.BotAI):
     async def attack(self):
       if len(self.units(VOIDRAY).idle) > 0:
           target = False
-          if self.iteration > self.do_something_after:
+          if self.time > self.do_something_after:
               if self.use_model:
                   prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
                   choice = np.argmax(prediction[0])
