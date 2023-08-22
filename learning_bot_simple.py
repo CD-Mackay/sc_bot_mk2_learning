@@ -62,6 +62,14 @@ class r2_sc2(sc2.BotAI):
             self.expand_dis_dir[distance_to_enemy_start] = el
         
         self.ordered_exp_distances = sorted(k for k in self.expand_dis_dir)
+        existing_ids = [unit.tag for unit in self.units]
+        to_be_removed = []
+        for noted_scout in self.scouts_and_spots:
+            if noted_scout not in existing_ids:
+                to_be_removed.append(noted_scout)
+        
+        for scout in to_be_removed:
+            del self.scouts_and_spots[scout]
         # if len(self.units(OBSERVER)) > 0:
         #     scout = self.units(OBSERVER)[0]
         #     if scout.is_idle:
