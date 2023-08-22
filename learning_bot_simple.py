@@ -249,8 +249,8 @@ class r2_sc2(sc2.BotAI):
                 choice = random.randrange(0,4)
               if choice == 0:
                   ## No attack
-                  wait = random.randrange(20, 165)
-                  self.do_something_after = self.iteration + wait
+                  wait = random.randrange(7, 100) / 100
+                  self.do_something_after = self.time + wait
               
               elif choice == 1:
                   ## attack enemy unit closest to nexus
