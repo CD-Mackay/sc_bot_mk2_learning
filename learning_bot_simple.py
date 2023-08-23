@@ -378,6 +378,16 @@ class r2_sc2(sc2.BotAI):
                 await self.do(u.attack(target))
             for u in self.units(ZEALOT).idle:
                 await self.do(u.attack(target))
+
+    async def attack_enemy_units(self):
+        if len(self.known_enemy_units) > 0:
+            target = self.known_enemy_units.closest_to(random.choice(self.units(NEXUS)))
+            for u in self.units(VOIDRAY).idle:
+                await self.do(u.attack(target))
+            for u in self.units(STALKER).idle:
+                await self.do(u.attack(target))
+            for u in self.units(ZEALOT).idle:
+                await self.do(u.attack(target))
     # async def attack(self):
     #   if len(self.units(VOIDRAY).idle) > 0:
     #       target = False
