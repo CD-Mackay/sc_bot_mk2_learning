@@ -316,9 +316,13 @@ class r2_sc2(sc2.BotAI):
                     await self.do(worker.build(ASSIMILATOR, vespene))
 
     async def expand(self):
-      if self.units(NEXUS).amount < self.time/2 and self.can_afford(NEXUS):
-        await self.expand_now()
+        try:
+            if self.can_afford(NEXUS):
+              await self.expand_now()
+        except Exception as e:
+            print(str(e))
 
+        
     async def offensive_buildings(self):
         if self.units(PYLON).ready.exists:
             pylon = self.units(PYLON).ready.random
