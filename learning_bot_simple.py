@@ -269,7 +269,20 @@ class r2_sc2(sc2.BotAI):
             if self.can_afford(VOIDRAY):
                 await self.do(random.choice(stargates).train(VOIDRAY))
 
-    async def build_zealot(self):
+    async def build_stalker(self):
+        pylon = self.units(PYLON).ready.random
+        gateways = self.units(GATEWAY).ready
+        cybercores = self.units(CYBERNETICSCORE).ready
+
+        if gateways.exists and cybercores.exists:
+            if self.can_afford(STALKER):
+                await self.do(random.choice(gateways).train(STALKER))
+        
+        if not cybercores.exists:
+            if self.units(GATEWAY).ready.exists:
+                if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
+                    await self.build(CYBERNETICSCORE, near=pylon)
+
     async def build_zealot(self):
     async def build_zealot(self):
     async def build_zealot(self):
