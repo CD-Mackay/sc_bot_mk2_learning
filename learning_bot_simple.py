@@ -14,6 +14,21 @@ HEADLESS = False
 
 class r2_sc2(sc2.BotAI):
     def __init__(self, use_model=False):
+        self.choices = {0: self.build_scout,
+                        1: self.build_zealot,
+                        2: self.build_gateway,
+                        3: self.build_voidray,
+                        4: self.build_stalker,
+                        5: self.build_worker,
+                        6: self.build_assimilator,
+                        7: self.build_stargate,
+                        8: self.build_pylon,
+                        9: self.defend_nexus,
+                        10: self.attack_known_enemy_unit,
+                        11: self.attack_known_enemy_structure,
+                        12: self.expand,
+                        13: self.do_nothing,
+                        }
         # self.ITERATIONS_PER_MINUTE = 165
         self.MAX_WORKERS = 50
         self.do_something_after = 0
