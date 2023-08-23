@@ -81,7 +81,7 @@ class r2_sc2(sc2.BotAI):
             y = np.zeros(14)
             y[choice] = 1
             self.train_data.append([y, self.flipped])
-            
+
     async def scout(self):
         self.expand_dis_dir = {}
         for el in self.expansion_locations:
@@ -251,7 +251,24 @@ class r2_sc2(sc2.BotAI):
             for rf in self.units(ROBOTICSFACILITY).ready.idle:
                 if self.can_afford(OBSERVER) and self.supply_left > 0:
                     await self.do(rf.train(OBSERVER))
-            
+
+    async def build_zealot(self):
+        gateways = self.units(GATEWAY).ready
+        if gateways.exists:
+            if self.can_afford(ZEALOT):
+                await self.do(random.choice(gateways).train(ZEALOT))
+    
+    async def build_gateway(self):
+        pylon = self.units(PYLON).ready.random
+        if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
+            await self.build(GATEWAY, near=pylon)
+    async def build_zealot(self):
+    async def build_zealot(self):
+    async def build_zealot(self):
+    async def build_zealot(self):
+    async def build_zealot(self):
+
+      
     
     async def build_workers(self):
         if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
