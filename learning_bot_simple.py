@@ -358,50 +358,69 @@ class r2_sc2(sc2.BotAI):
             return random.choice(self.known_enemy_structures)
         else:
             return self.enemy_start_locations[0]
-        
-    async def attack(self):
-      if len(self.units(VOIDRAY).idle) > 0:
-          target = False
-          if self.time > self.do_something_after:
-              if self.use_model:
-                  prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
-                  choice = np.argmax(prediction[0])
-                  choice_dict = {
-                      0: "no attack",
-                      1: "attack close to nexus",
-                      2: "attack enemy structure",
-                      3: "attack enemy start"
-                  }
-                  print("Choice #{}:{}".format(choice, choice_dict[choice]))
-              else:
-                choice = random.randrange(0,4)
-              if choice == 0:
-                  ## No attack
-                  wait = random.randrange(7, 100) / 100
-                  self.do_something_after = self.time + wait
+    
+    async def defend_nexus(self):
+        if len(self.known_enemy_units) > 0:
+            target = self.known_enemy_units.closest_to(random.choice(self.units(NEXUS)))
+            for u in self.units(VOIDRAY).idle:
+                await self.do(u.attack(target))
+            for u in self.units(STALKER).idle:
+                await self.do(u.attack(target))
+            for u in self.units(ZEALOT).idle:
+                await self.do(u.attack(target))
+    
+    async def attack_enemy_structures(self):
+        if len(self.known_enemy_structures) > 0:
+            target = random.choice(self.known_enemy_structures)
+            for u in self.units(VOIDRAY).idle:
+                await self.do(u.attack(target))
+            for u in self.units(STALKER).idle:
+                await self.do(u.attack(target))
+            for u in self.units(ZEALOT).idle:
+                await self.do(u.attack(target))
+    # async def attack(self):
+    #   if len(self.units(VOIDRAY).idle) > 0:
+    #       target = False
+    #       if self.time > self.do_something_after:
+    #           if self.use_model:
+    #               prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
+    #               choice = np.argmax(prediction[0])
+    #               choice_dict = {
+    #                   0: "no attack",
+    #                   1: "attack close to nexus",
+    #                   2: "attack enemy structure",
+    #                   3: "attack enemy start"
+    #               }
+    #               print("Choice #{}:{}".format(choice, choice_dict[choice]))
+    #           else:
+    #             choice = random.randrange(0,4)
+    #           if choice == 0:
+    #               ## No attack
+    #               wait = random.randrange(7, 100) / 100
+    #               self.do_something_after = self.time + wait
               
-              elif choice == 1:
-                  ## attack enemy unit closest to nexus
-                  if len(self.known_enemy_units) > 0:
-                      target = self.known_enemy_units.closest_to(random.choice(self.units(NEXUS)))
+    #           elif choice == 1:
+    #               ## attack enemy unit closest to nexus
+    #               if len(self.known_enemy_units) > 0:
+    #                   target = self.known_enemy_units.closest_to(random.choice(self.units(NEXUS)))
               
-              elif choice == 2:
-                  ## Attack enemy structures
-                  if len(self.known_enemy_structures) > 0:
-                      target = random.choice(self.known_enemy_structures)
+    #           elif choice == 2:
+    #               ## Attack enemy structures
+    #               if len(self.known_enemy_structures) > 0:
+    #                   target = random.choice(self.known_enemy_structures)
               
-              elif choice == 3:
-                  ## Attack known enemy start location
-                  target = self.enemy_start_locations[0]
+    #           elif choice == 3:
+    #               ## Attack known enemy start location
+    #               target = self.enemy_start_locations[0]
 
-              if target:
-                  for vr in self.units(VOIDRAY):
-                      await self.do(vr.attack(target))
+    #           if target:
+    #               for vr in self.units(VOIDRAY):
+    #                   await self.do(vr.attack(target))
               
-              y = np.zeros(4)
-              y[choice] = 1
-              print("y:", y)
-              self.train_data.append([y, self.flipped])
+    #           y = np.zeros(4)
+    #           y[choice] = 1
+    #           print("y:", y)
+    #           self.train_data.append([y, self.flipped])
 
 counter = 0
 
