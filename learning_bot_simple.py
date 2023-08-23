@@ -64,7 +64,24 @@ class r2_sc2(sc2.BotAI):
         await self.intel()
         await self.do_something()
 
-      
+    
+    async def do_something(self):
+        
+        if self.time > self.do_something_after:
+            if self.use_model:
+                prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
+                choice = np.argmax(prediction[0])
+            else:
+                choice = random.randrange(0, 14)
+            try:
+                await self.choices[choice]()
+            except Exception as e:
+                print(str(e))
+            
+            y = np.zeros(14)
+            y[choice] = 1
+            self.train_data.append([y, self.flipped])
+            
     async def scout(self):
         self.expand_dis_dir = {}
         for el in self.expansion_locations:
