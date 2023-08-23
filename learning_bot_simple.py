@@ -283,7 +283,12 @@ class r2_sc2(sc2.BotAI):
                 if self.can_afford(CYBERNETICSCORE) and not self.already_pending(CYBERNETICSCORE):
                     await self.build(CYBERNETICSCORE, near=pylon)
 
-    async def build_zealot(self):
+    async def build_stargate(self):
+        if self.units(PYLON).ready.exists:
+            pylon = self.units(PYLON).ready.random
+            if self.units(CYBERNETICSCORE).ready.exists:
+                if self.can_afford(STARGATE) and not self.already_pending(STARGATE):
+                    await self.build(STARGATE, near=pylon)
     async def build_zealot(self):
     async def build_zealot(self):
 
