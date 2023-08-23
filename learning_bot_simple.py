@@ -1,7 +1,7 @@
 import sc2
 from sc2 import run_game, maps, Race, Difficulty, position, Result
 from sc2.player import Bot, Computer
-from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY, ROBOTICSFACILITY, OBSERVER
+from sc2.constants import NEXUS, PROBE, PYLON, ASSIMILATOR, CYBERNETICSCORE, GATEWAY, STALKER, STARGATE, VOIDRAY, ROBOTICSFACILITY, OBSERVER, ZEALOT 
 import random
 import time
 import cv2
@@ -262,7 +262,13 @@ class r2_sc2(sc2.BotAI):
         pylon = self.units(PYLON).ready.random
         if self.can_afford(GATEWAY) and not self.already_pending(GATEWAY):
             await self.build(GATEWAY, near=pylon)
-    async def build_zealot(self):
+
+    async def build_voidray(self):
+        stargates = self.units(STARGATE).ready
+        if stargates.exists:
+            if self.can_afford(VOIDRAY):
+                await self.do(random.choice(stargates).train(VOIDRAY))
+
     async def build_zealot(self):
     async def build_zealot(self):
     async def build_zealot(self):
