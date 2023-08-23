@@ -59,16 +59,10 @@ class r2_sc2(sc2.BotAI):
     async def on_step(self, iteration):
         # self.iteration = iteration
         self.time = (self.state.game_loop / 22.4) / 60
-        await self.scout()
         await self.distribute_workers()
-        await self.build_workers()
-        await self.build_pylons()
-        await self.build_assimilator()
-        await self.expand()
-        await self.offensive_buildings()
-        await self.build_offensive_force()
+        await self.scout()
         await self.intel()
-        await self.attack()
+        await self.do_something()
 
       
     async def scout(self):
