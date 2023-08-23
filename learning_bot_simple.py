@@ -290,10 +290,10 @@ class r2_sc2(sc2.BotAI):
       
     
     async def build_workers(self):
-        if len(self.units(NEXUS)) * 16 > len(self.units(PROBE)) and len(self.units(PROBE)) < self.MAX_WORKERS:
-          for nexus in self.units(NEXUS).ready.idle:
-              if self.can_afford(PROBE):
-                  await self.do(nexus.train(PROBE))
+        nexuses = self.units(NEXUS).ready
+        if nexuses.exists:
+            if self.can_afford(PROBE):
+                await self.do(random.choice(nexuses).train(PROBE))
 
     async def build_pylons(self):
         if self.supply_left < 5 and not self.already_pending(PYLON):
