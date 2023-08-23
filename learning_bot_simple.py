@@ -289,10 +289,6 @@ class r2_sc2(sc2.BotAI):
             if self.units(CYBERNETICSCORE).ready.exists:
                 if self.can_afford(STARGATE) and not self.already_pending(STARGATE):
                     await self.build(STARGATE, near=pylon)
-    async def build_zealot(self):
-    async def build_zealot(self):
-
-      
     
     async def build_workers(self):
         nexuses = self.units(NEXUS).ready
@@ -301,11 +297,10 @@ class r2_sc2(sc2.BotAI):
                 await self.do(random.choice(nexuses).train(PROBE))
 
     async def build_pylons(self):
-        if self.supply_left < 5 and not self.already_pending(PYLON):
-            nexuses = self.units(NEXUS).ready
-            if nexuses.exists:
-                if self.can_afford(PYLON):
-                    await self.build(PYLON, near=nexuses.first)
+        nexuses = self.units(NEXUS).ready
+        if nexuses.exists:
+          if self.can_afford(PYLON):
+            await self.build(PYLON, near=self.units(NEXUS).first.position.towards(self.game_info.map_center, 5))
     
     
     async def build_assimilator(self):
