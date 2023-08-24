@@ -72,7 +72,16 @@ class r2_sc2(sc2.BotAI):
                 prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
                 choice = np.argmax(prediction[0])
             else:
-                choice = random.randrange(0, 14)
+                worker_weight = 8
+                zealot_weight = 3
+                voidray_weight = 20
+                stalker_weight = 8
+                pylon_weight = 5
+                stargate_weight = 5
+                gateway_weight = 3
+
+                choice_weights = 1*[0]+zealot_weight*[1]+gateway_weight*[2]+voidray_weight*[3]+stalker_weight*[4]+worker_weight*[5]+1*[6]+stargate_weight*[7]+pylon_weight*[8]+1*[9]+1*[10]+1*[11]+1*[12]+1*[13]
+                choice = random.choice(choice_weights)
             try:
                 await self.choices[choice]()
             except Exception as e:
@@ -216,8 +225,8 @@ class r2_sc2(sc2.BotAI):
         if not HEADLESS:
             cv2.imshow(str(self.title), resized)
             cv2.waitKey(1)
-        
-            
+
+
 
 
         # draw_dict = {
