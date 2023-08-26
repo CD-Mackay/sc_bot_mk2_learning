@@ -435,12 +435,8 @@ class r2_sc2(sc2.BotAI):
             for u in self.units(ZEALOT).idle:
                 await self.do(u.attack(target))
 
-counter = 0
-
-while counter < 5:
     
-  run_game(maps.get("AbyssalReefLE"), [
+run_game(maps.get("AbyssalReefLE"), [
       Bot(Race.Protoss, r2_sc2(use_model=True)),
       Computer(Race.Terran, Difficulty.Easy)
   ], realtime=False)
-  counter+=1 
