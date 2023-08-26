@@ -29,7 +29,6 @@ class r2_sc2(sc2.BotAI):
                         12: self.expand,
                         13: self.do_nothing,
                         }
-        # self.ITERATIONS_PER_MINUTE = 165
         self.MAX_WORKERS = 50
         self.do_something_after = 0
         self.train_data = []
@@ -57,7 +56,6 @@ class r2_sc2(sc2.BotAI):
 
 
     async def on_step(self, iteration):
-        # self.iteration = iteration
         self.time = (self.state.game_loop / 22.4) / 60
         await self.distribute_workers()
         await self.scout()
@@ -71,7 +69,7 @@ class r2_sc2(sc2.BotAI):
             if self.use_model:
                 prediction = self.model.predict([self.flipped.reshape([-1, 176, 200, 3])])
                 choice = np.argmax(prediction[0])
-            else:
+            else: ## Weights given to various choice for the AI model. Adjust weights to alter strategy used by AI
                 worker_weight = 8
                 zealot_weight = 3
                 voidray_weight = 20
@@ -146,19 +144,6 @@ class r2_sc2(sc2.BotAI):
                 if obs in [probe for probe in self.units(PROBE)]:
                     await self.do(obs.move(self.random_location_variance(self.scouts_and_spots[obs.tag])))
 
-            
-          
-        # if len(self.units(OBSERVER)) > 0:
-        #     scout = self.units(OBSERVER)[0]
-        #     if scout.is_idle:
-        #         enemy_location = self.enemy_start_locations[0]
-        #         move_to = self.random_location_variance(enemy_location)
-        #         await self.do(scout.move(move_to))
-        
-        # else:
-        #     for rf in self.units(ROBOTICSFACILITY).ready.idle:
-        #         if self.can_afford(OBSERVER) and self.supply_left > 0:
-        #             await self.do(rf.train(OBSERVER))
 
     def random_location_variance(self, enemy_start_location):
         x = enemy_start_location[0]
